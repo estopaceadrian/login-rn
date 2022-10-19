@@ -14,9 +14,9 @@ const Navigation = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Home" component={Welcome} options={{ headerShown: false }} />
         <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
         <Stack.Screen name="Register" component={Signup} options={{ headerShown: false }} />
+        <Stack.Screen name="Home" component={Welcome} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
