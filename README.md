@@ -10,7 +10,7 @@
 
 
 # Login page
-![image](https://user-images.githubusercontent.com/12807154/196782604-48c868fb-1ff5-4047-830f-fa69ab3e0436.png)
+![image](https://user-images.githubusercontent.com/12807154/196785556-9e7d447c-fac1-4186-bef0-804200c113dc.png)
 # Signup page
 ![image](https://user-images.githubusercontent.com/12807154/196782685-c866896b-7803-4537-8fe4-ec579a3d7cc2.png)
 # Campaigns page
