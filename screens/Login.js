@@ -120,9 +120,9 @@ const Login = ({ navigation }) => {
         </Text>
       </View>
       <View style={{ padding: 20, width: '100%', backgroundColor: '#F5F5F5' }}>
-        <TouchableOpacity
+        <Text
           style={{
-            color: '#ffff',
+            color: 'white',
             padding: 10,
             width: 120,
             textAlign: 'center',
@@ -132,8 +132,8 @@ const Login = ({ navigation }) => {
           }}
           onPress={onSubmitHandler}
         >
-          <Text> Login</Text>
-        </TouchableOpacity>
+          Login
+        </Text>
       </View>
     </View>
   );
