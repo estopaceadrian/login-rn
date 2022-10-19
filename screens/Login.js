@@ -1,10 +1,75 @@
-import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import React, { useState } from 'react';
 
-const Login = () => {
+const API_URL = 'http://192.168.55.102:5000';
+
+const Login = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const [isError, setIsError] = useState(false);
+  const [message, setMessage] = useState('');
+
+  const onLoggedIn = (token) => {
+    fetch(`${API_URL}/private`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(async (res) => {
+        try {
+          const jsonRes = await res.json();
+          if (res.status === 200) {
+            setMessage(jsonRes.message);
+          }
+        } catch (err) {
+          console.log(err);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const onSubmitHandler = () => {
+    const payload = {
+      email,
+      password,
+    };
+    fetch(`${API_URL}/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    })
+      .then(async (res) => {
+        try {
+          const jsonRes = await res.json();
+          if (res.status !== 200) {
+            setIsError(true);
+            setMessage(jsonRes.message);
+          } else {
+            onLoggedIn(jsonRes.token);
+            setIsError(false);
+            setMessage(jsonRes.message);
+            navigation.navigate('Home');
+          }
+        } catch (err) {
+          console.log(err);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const getMessage = () => {
+    const status = isError ? `Error: ` : `Success: `;
+    return status + message;
+  };
   return (
     <View style={styles.container}>
       {/* brand */}
@@ -22,14 +87,15 @@ const Login = () => {
       </View>
 
       {/* login */}
-
       <View style={{ borderWidth: 1, borderColor: '#DEDEDE', width: '100%', justifyContent: 'center', padding: 50 }}>
         <Text style={styles.label}>Email address</Text>
         <View style={styles.inputView}>
           <TextInput
             style={styles.TextInput}
+            value={email}
             placeholder="Enter email address"
             placeholderTextColor="#DEDEDE"
+            autoCapitalize="none"
             onChangeText={(email) => setEmail(email)}
           />
         </View>
@@ -38,18 +104,25 @@ const Login = () => {
         <View style={styles.inputView}>
           <TextInput
             style={styles.TextInput}
+            value={password}
             placeholder="Enter your password"
             placeholderTextColor="#DEDEDE"
             secureTextEntry={true}
             onChangeText={(password) => setPassword(password)}
           />
         </View>
+        <Text style={[styles.message, { color: isError ? 'red' : 'green' }]}>{message ? getMessage() : null}</Text>
         <Text style={{ color: '#6DE1A7' }}>Forgotten password?</Text>
+        <Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+            <Text style={{ color: '#6DE1A7' }}>Register</Text>
+          </TouchableOpacity>
+        </Text>
       </View>
-      <View style={{ padding: 20, width: '100%', backgroundColor: '#DEDEDE' }}>
-        <Text
+      <View style={{ padding: 20, width: '100%', backgroundColor: '#F5F5F5' }}>
+        <TouchableOpacity
           style={{
-            color: 'white',
+            color: '#ffff',
             padding: 10,
             width: 120,
             textAlign: 'center',
@@ -57,9 +130,10 @@ const Login = () => {
             backgroundColor: '#6DE1A7',
             marginLeft: 30,
           }}
+          onPress={onSubmitHandler}
         >
-          Login
-        </Text>
+          <Text> Login</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -102,5 +176,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#DEDEDE',
     marginTop: 5,
+  },
+  message: {
+    fontSize: 16,
+    marginVertical: '1%',
   },
 });
